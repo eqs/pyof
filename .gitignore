@@ -8,8 +8,8 @@ of_v0.11.0_vs2017_release/
 # ignore generated binaries
 # but not the data folder
 
-/bin/*
-!/bin/data/
+/pyoflib/bin/*
+!/pyoflib/bin/data/
 
 # general
 
