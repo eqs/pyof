@@ -185,9 +185,15 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
+    <ClCompile Include="src\ofPyBaseApp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h" />
+    <ClInclude Include="src\ofPyBaseApp.h" />
+    <ClInclude Include="src\pybind_app.h" />
+    <ClInclude Include="src\pybind_graphics.h" />
+    <ClInclude Include="src\pybind_math.h" />
+    <ClInclude Include="src\pybind_types.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
