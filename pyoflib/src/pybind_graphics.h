@@ -1,8 +1,34 @@
 #pragma once
 #include "ofMain.h"
+#include "ofImage.h"
+#include "ofPixels.h"
 #include <pybind11/pybind11.h>
 
 namespace py = pybind11;
+
+template<typename PixelType>
+void declare_ofImage(py::module &m, std::string &pyclass_name) {
+	typedef ofImage_<PixelType> ImageClass;
+	// typedef ofPixels<PixelType> PixelClass;
+	py::class_<ImageClass>(m, pyclass_name.c_str())
+		.def(py::init<>())
+		.def(py::init<ImageClass>())
+		// .def(py::init<PixelClass>())
+		.def("allocate", (void (ImageClass::*)(int, int, ofImageType)) &ImageClass::allocate)
+		.def("isAllocated", &ImageClass::isAllocated)
+		.def("clear", &ImageClass::clear)
+		.def("getHeight", (float (ImageClass::*)()) &ImageClass::getHeight)
+		.def("getWidth", (float (ImageClass::*)()) &ImageClass::getWidth)
+		.def(
+			"load",
+			(bool (ImageClass::*)(const std::filesystem::path &, const ofImageLoadSettings &)) &ImageClass::load
+		)
+		.def(
+			"load",
+			(bool (ImageClass::*)(const ofBuffer &, const ofImageLoadSettings &)) &ImageClass::load
+		)
+		.def("grabScreen", (void (ImageClass::*)(int, int, int, int)) &ImageClass::grabScreen);
+}
 
 void pybind_graphics(py::module m) {
 	m.def("ofBackground", (void(*) (const ofColor &)) &ofBackground);
@@ -171,4 +197,36 @@ void pybind_graphics(py::module m) {
 	//m.def("ofVertices", (void(*) (const vector &)) &ofVertices);
 	m.def("ofViewport", (void(*) (ofRectangle)) &ofViewport);
 	m.def("ofViewport", (void(*) (float, float, float, float, bool)) &ofViewport);
+
+	// ofPixels.h ------------------------------------------------------------
+
+	py::enum_<ofPixelFormat>(m, "ofPixelFormat")
+		.value("OF_PIXELS_GRAY", ofPixelFormat::OF_PIXELS_GRAY)
+		.value("OF_PIXELS_GRAY_ALPHA", ofPixelFormat::OF_PIXELS_GRAY_ALPHA)
+		.value("OF_PIXELS_RGB", ofPixelFormat::OF_PIXELS_RGB)
+		.value("OF_PIXELS_BGR", ofPixelFormat::OF_PIXELS_BGR)
+		.value("OF_PIXELS_RGBA", ofPixelFormat::OF_PIXELS_RGBA)
+		.value("OF_PIXELS_BGRA", ofPixelFormat::OF_PIXELS_BGRA)
+		.value("OF_PIXELS_RGB565", ofPixelFormat::OF_PIXELS_RGB565)
+		.value("OF_PIXELS_NV12", ofPixelFormat::OF_PIXELS_NV12)
+		.value("OF_PIXELS_NV21", ofPixelFormat::OF_PIXELS_NV21)
+		.value("OF_PIXELS_YV12", ofPixelFormat::OF_PIXELS_YV12)
+		.value("OF_PIXELS_I420", ofPixelFormat::OF_PIXELS_I420)
+		.value("OF_PIXELS_YUY2", ofPixelFormat::OF_PIXELS_YUY2)
+		.value("OF_PIXELS_UYVY", ofPixelFormat::OF_PIXELS_UYVY)
+		.value("OF_PIXELS_Y", ofPixelFormat::OF_PIXELS_Y)
+		.value("OF_PIXELS_U", ofPixelFormat::OF_PIXELS_U)
+		.value("OF_PIXELS_V", ofPixelFormat::OF_PIXELS_V)
+		.value("OF_PIXELS_UV", ofPixelFormat::OF_PIXELS_UV)
+		.value("OF_PIXELS_VU", ofPixelFormat::OF_PIXELS_VU)
+		.value("OF_PIXELS_NUM_FORMATS", ofPixelFormat::OF_PIXELS_NUM_FORMATS)
+		.value("OF_PIXELS_UNKNOWN", ofPixelFormat::OF_PIXELS_UNKNOWN)
+		.value("OF_PIXELS_NATIVE", ofPixelFormat::OF_PIXELS_NATIVE)
+		.export_values();
+
+	// ofImage.h -------------------------------------------------------------
+
+	declare_ofImage<unsigned char>(m, std::string("ofImage"));
+	declare_ofImage<float>(m, std::string("ofFloatImage"));
+	declare_ofImage<unsigned short>(m, std::string("ofShortImage"));
 }
