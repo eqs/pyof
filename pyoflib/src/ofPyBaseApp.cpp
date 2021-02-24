@@ -1,4 +1,5 @@
 #include "ofMain.h"
+#include "ofUtils.h"
 #include "ofPyBaseApp.h"
 #include <pybind11/pybind11.h>
 
@@ -52,6 +53,14 @@ void ofPyBaseApp::gotMessage(ofMessage msg) {
 
 
 void ofPyBaseApp::run(int w, int h, ofWindowMode mode) {
+
+	// Change default working dir
+	auto os_module = py::module::import("os");
+	auto result = os_module.attr("getcwd")();
+	std::filesystem::path path = result.cast<std::string>();
+	path += "/data";
+	ofSetDataPathRoot(path);
+
 	py::object self = py::cast(this);
 	self.inc_ref();
 	ofSetupOpenGL(w, h, mode);
