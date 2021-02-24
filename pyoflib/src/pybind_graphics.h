@@ -27,6 +27,16 @@ void declare_ofImage(py::module &m, std::string &pyclass_name) {
 			"load",
 			(bool (ImageClass::*)(const ofBuffer &, const ofImageLoadSettings &)) &ImageClass::load
 		)
+		.def(
+			"save",
+			py::overload_cast<const std::filesystem::path &, ofImageQualityType>(&ImageClass::save, py::const_),
+			py::arg("fileName"), py::arg("compressionLevel") = OF_IMAGE_QUALITY_BEST
+		)
+		.def(
+			"save",
+			py::overload_cast<ofBuffer &, ofImageFormat, ofImageQualityType>(&ImageClass::save, py::const_),
+			py::arg("buffer"), py::arg("imageFormat") = OF_IMAGE_FORMAT_PNG, py::arg("compressionLevel") = OF_IMAGE_QUALITY_BEST
+		)
 		.def("grabScreen", (void (ImageClass::*)(int, int, int, int)) &ImageClass::grabScreen);
 }
 
