@@ -15,21 +15,31 @@ void declare_ofImage(py::module &m, std::string &pyclass_name) {
 		.def(py::init<ImageClass>())
 		// .def(py::init<PixelClass>())
 		.def("allocate", (void (ImageClass::*)(int, int, ofImageType)) &ImageClass::allocate)
-		.def("bind")
+		.def("bind", (void (ImageClass::*)(int)) &ImageClass::bind, py::arg("textureLocation") = 0)
 		.def("clear", &ImageClass::clear)
-		.def("crop")
-		.def("cropFrom")
-		.def("draw")
-		.def("drawSubsection")
-		.def("getColor")
+		.def("crop", (void (ImageClass::*)(int, int, int, int)) &ImageClass::crop)
+		.def("cropFrom", (void (ImageClass::*)(const ofImage_<PixelType> &, int, int, int, int)) &ImageClass::cropFrom)
+		.def("draw", py::overload_cast<float, float>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<float, float, float>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<const glm::vec3 &>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<float, float, float, float>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<float, float, float, float, float>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<const glm::vec3 &, float, float>(&ImageClass::draw, py::const_))
+		.def("drawSubsection", py::overload_cast<float, float, float, float, float, float>(&ImageClass::drawSubsection, py::const_))
+		.def("drawSubsection", py::overload_cast<float, float, float, float, float, float, float>(&ImageClass::drawSubsection, py::const_))
+		.def("drawSubsection", py::overload_cast<float, float, float, float, float, float, float, float>(&ImageClass::drawSubsection, py::const_))
+		.def("getColor", py::overload_cast<int, int>(&ImageClass::getColor, py::const_))
+		.def("getColor", py::overload_cast<int>(&ImageClass::getColor, py::const_))
 		.def("getHeight", (float (ImageClass::*)()) &ImageClass::getHeight)
-		.def("getImageType")
-		.def("getPixels")
-		.def("getTexture")
+		.def("getImageType", (ofImageType (ImageClass::*)()) &ImageClass::getImageType)
+		.def("getPixels", py::overload_cast<>(&ImageClass::getPixels))
+		.def("getPixels", py::overload_cast<>(&ImageClass::getPixels, py::const_))
+		.def("getTexture", py::overload_cast<>(&ImageClass::getTexture))
+		.def("getTexture", py::overload_cast<>(&ImageClass::getTexture, py::const_))
 		.def("getWidth", (float (ImageClass::*)()) &ImageClass::getWidth)
 		.def("grabScreen", (void (ImageClass::*)(int, int, int, int)) &ImageClass::grabScreen)
 		.def("isAllocated", &ImageClass::isAllocated)
-		.def("isUsingTexture")
+		.def("isUsingTexture", (bool (ImageClass::*)()) &ImageClass::isUsingTexture)
 		.def(
 			"load",
 			(bool (ImageClass::*)(const std::filesystem::path &, const ofImageLoadSettings &)) &ImageClass::load
@@ -38,10 +48,10 @@ void declare_ofImage(py::module &m, std::string &pyclass_name) {
 			"load",
 			(bool (ImageClass::*)(const ofBuffer &, const ofImageLoadSettings &)) &ImageClass::load
 		)
-		.def("mirror")
-		.def("resetAnchor")
-		.def("resize")
-		.def("rotate90")
+		.def("mirror", (void (ImageClass::*)(bool, bool)) &ImageClass::mirror)
+		.def("resetAnchor", &ImageClass::resetAnchor)
+		.def("resize", (void (ImageClass::*)(int, int)) &ImageClass::resize)
+		.def("rotate90", (void (ImageClass::*)(int)) &ImageClass::rotate90)
 		.def(
 			"save",
 			py::overload_cast<const std::filesystem::path &, ofImageQualityType>(&ImageClass::save, py::const_),
@@ -52,15 +62,21 @@ void declare_ofImage(py::module &m, std::string &pyclass_name) {
 			py::overload_cast<ofBuffer &, ofImageFormat, ofImageQualityType>(&ImageClass::save, py::const_),
 			py::arg("buffer"), py::arg("imageFormat") = OF_IMAGE_FORMAT_PNG, py::arg("compressionLevel") = OF_IMAGE_QUALITY_BEST
 		)
-		.def("setAnchorPercent")
-		.def("setAnchorPoint")
-		.def("setColor")
-		.def("setCompression")
-		.def("setFromPixels")
-		.def("setImageType")
-		.def("setUseTexture")
-		.def("unbind")
-		.def("update");
+		.def("setAnchorPercent", (void (ImageClass::*)(float, float)) &ImageClass::setAnchorPercent)
+		.def("setAnchorPoint", (void (ImageClass::*)(float, float)) &ImageClass::setAnchorPoint)
+		.def("setColor", py::overload_cast<int, int, const ofColor_<PixelType> &>(&ImageClass::setColor))
+		.def("setColor", py::overload_cast<int, const ofColor_<PixelType> &>(&ImageClass::setColor))
+		.def("setColor", py::overload_cast<const ofColor_<PixelType> &>(&ImageClass::setColor))
+		.def("setCompression", (void (ImageClass::*)(ofTexCompression)) &ImageClass::setCompression)
+		.def(
+			"setFromPixels",
+			py::overload_cast<const PixelType *, int, int, ofImageType, bool>(&ImageClass::setFromPixels),
+			py::arg("pixels"), py::arg("w"), py::arg("h"), py::arg("type"), py::arg("bOderIsRGB") = true)
+		.def("setFromPixels", py::overload_cast<const ofPixels_<PixelType> &>(&ImageClass::setFromPixels))
+		.def("setImageType", (void (ImageClass::*)(ofImageType)) &ImageClass::setImageType)
+		.def("setUseTexture", (void (ImageClass::*)(bool)) &ImageClass::setUseTexture)
+		.def("unbind", (void (ImageClass::*)(int)) &ImageClass::unbind, py::arg("textureLocation") = 0)
+		.def("update", &ImageClass::update);
 }
 
 void pybind_graphics(py::module m) {
