@@ -191,6 +191,7 @@
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\ofPyBaseApp.h" />
     <ClInclude Include="src\pybind_app.h" />
+    <ClInclude Include="src\pybind_gl.h" />
     <ClInclude Include="src\pybind_graphics.h" />
     <ClInclude Include="src\pybind_math.h" />
     <ClInclude Include="src\pybind_types.h" />

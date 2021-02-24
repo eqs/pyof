@@ -38,6 +38,9 @@
     <ClInclude Include="src\pybind_utils.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\pybind_gl.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
