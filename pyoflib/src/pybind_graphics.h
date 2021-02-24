@@ -15,10 +15,21 @@ void declare_ofImage(py::module &m, std::string &pyclass_name) {
 		.def(py::init<ImageClass>())
 		// .def(py::init<PixelClass>())
 		.def("allocate", (void (ImageClass::*)(int, int, ofImageType)) &ImageClass::allocate)
-		.def("isAllocated", &ImageClass::isAllocated)
+		.def("bind")
 		.def("clear", &ImageClass::clear)
+		.def("crop")
+		.def("cropFrom")
+		.def("draw")
+		.def("drawSubsection")
+		.def("getColor")
 		.def("getHeight", (float (ImageClass::*)()) &ImageClass::getHeight)
+		.def("getImageType")
+		.def("getPixels")
+		.def("getTexture")
 		.def("getWidth", (float (ImageClass::*)()) &ImageClass::getWidth)
+		.def("grabScreen", (void (ImageClass::*)(int, int, int, int)) &ImageClass::grabScreen)
+		.def("isAllocated", &ImageClass::isAllocated)
+		.def("isUsingTexture")
 		.def(
 			"load",
 			(bool (ImageClass::*)(const std::filesystem::path &, const ofImageLoadSettings &)) &ImageClass::load
@@ -27,6 +38,10 @@ void declare_ofImage(py::module &m, std::string &pyclass_name) {
 			"load",
 			(bool (ImageClass::*)(const ofBuffer &, const ofImageLoadSettings &)) &ImageClass::load
 		)
+		.def("mirror")
+		.def("resetAnchor")
+		.def("resize")
+		.def("rotate90")
 		.def(
 			"save",
 			py::overload_cast<const std::filesystem::path &, ofImageQualityType>(&ImageClass::save, py::const_),
@@ -37,7 +52,15 @@ void declare_ofImage(py::module &m, std::string &pyclass_name) {
 			py::overload_cast<ofBuffer &, ofImageFormat, ofImageQualityType>(&ImageClass::save, py::const_),
 			py::arg("buffer"), py::arg("imageFormat") = OF_IMAGE_FORMAT_PNG, py::arg("compressionLevel") = OF_IMAGE_QUALITY_BEST
 		)
-		.def("grabScreen", (void (ImageClass::*)(int, int, int, int)) &ImageClass::grabScreen);
+		.def("setAnchorPercent")
+		.def("setAnchorPoint")
+		.def("setColor")
+		.def("setCompression")
+		.def("setFromPixels")
+		.def("setImageType")
+		.def("setUseTexture")
+		.def("unbind")
+		.def("update");
 }
 
 void pybind_graphics(py::module m) {
