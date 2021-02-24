@@ -42,11 +42,13 @@ void declare_ofImage(py::module &m, std::string &pyclass_name) {
 		.def("isUsingTexture", (bool (ImageClass::*)()) &ImageClass::isUsingTexture)
 		.def(
 			"load",
-			(bool (ImageClass::*)(const std::filesystem::path &, const ofImageLoadSettings &)) &ImageClass::load
+			(bool (ImageClass::*)(const std::filesystem::path &, const ofImageLoadSettings &)) &ImageClass::load,
+			py::arg("path"), py::arg("settings") = ofImageLoadSettings()
 		)
 		.def(
 			"load",
-			(bool (ImageClass::*)(const ofBuffer &, const ofImageLoadSettings &)) &ImageClass::load
+			(bool (ImageClass::*)(const ofBuffer &, const ofImageLoadSettings &)) &ImageClass::load,
+			py::arg("buffer"), py::arg("settings") = ofImageLoadSettings()
 		)
 		.def("mirror", (void (ImageClass::*)(bool, bool)) &ImageClass::mirror)
 		.def("resetAnchor", &ImageClass::resetAnchor)
