@@ -6,6 +6,7 @@
 #include "pybind_app.h"
 #include "pybind_graphics.h"
 #include "pybind_math.h"
+#include "pybind_utils.h"
 
 namespace py = pybind11;
 
@@ -17,6 +18,7 @@ PYBIND11_MODULE(pyoflib, m) {
 	pybind_app(m);
 	pybind_graphics(m);
 	pybind_math(m);
+	pybind_utils(m);
 
 	py::class_<ofBaseApp, ofPyBaseApp>(m, "ofPyBaseApp")
 		.def(py::init<>())
@@ -40,6 +42,13 @@ PYBIND11_MODULE(pyoflib, m) {
 
 	m.def("ofSetWindowTitle", (void(*)(std::string)) &ofSetWindowTitle);
 	m.def("ofGetFrameNum", (int(*)()) &ofGetFrameNum);
+
+	// Misc
+
+	// https://stackoverflow.com/questions/56009999/python-bindings-using-pybind11-with-stdfilesystem-as-function-argument-giving
+	py::class_<std::filesystem::path>(m, "Path")
+		.def(py::init<std::string>());
+	py::implicitly_convertible<std::string, std::filesystem::path>();
 
 	m.attr("__version__") = py::str("0.0.1");
 	m.attr("__author__") = py::str("eqs");

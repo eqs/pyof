@@ -1,8 +1,85 @@
 #pragma once
 #include "ofMain.h"
+#include "ofImage.h"
+#include "ofPixels.h"
 #include <pybind11/pybind11.h>
 
 namespace py = pybind11;
+
+template<typename PixelType>
+void declare_ofImage(py::module &m, std::string &pyclass_name) {
+	typedef ofImage_<PixelType> ImageClass;
+	// typedef ofPixels<PixelType> PixelClass;
+	py::class_<ImageClass>(m, pyclass_name.c_str())
+		.def(py::init<>())
+		.def(py::init<ImageClass>())
+		// .def(py::init<PixelClass>())
+		.def("allocate", (void (ImageClass::*)(int, int, ofImageType)) &ImageClass::allocate)
+		.def("bind", (void (ImageClass::*)(int)) &ImageClass::bind, py::arg("textureLocation") = 0)
+		.def("clear", &ImageClass::clear)
+		.def("crop", (void (ImageClass::*)(int, int, int, int)) &ImageClass::crop)
+		.def("cropFrom", (void (ImageClass::*)(const ofImage_<PixelType> &, int, int, int, int)) &ImageClass::cropFrom)
+		.def("draw", py::overload_cast<float, float>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<float, float, float>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<const glm::vec3 &>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<float, float, float, float>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<float, float, float, float, float>(&ImageClass::draw, py::const_))
+		.def("draw", py::overload_cast<const glm::vec3 &, float, float>(&ImageClass::draw, py::const_))
+		.def("drawSubsection", py::overload_cast<float, float, float, float, float, float>(&ImageClass::drawSubsection, py::const_))
+		.def("drawSubsection", py::overload_cast<float, float, float, float, float, float, float>(&ImageClass::drawSubsection, py::const_))
+		.def("drawSubsection", py::overload_cast<float, float, float, float, float, float, float, float>(&ImageClass::drawSubsection, py::const_))
+		.def("getColor", py::overload_cast<int, int>(&ImageClass::getColor, py::const_))
+		.def("getColor", py::overload_cast<int>(&ImageClass::getColor, py::const_))
+		.def("getHeight", (float (ImageClass::*)()) &ImageClass::getHeight)
+		.def("getImageType", (ofImageType (ImageClass::*)()) &ImageClass::getImageType)
+		.def("getPixels", py::overload_cast<>(&ImageClass::getPixels))
+		.def("getPixels", py::overload_cast<>(&ImageClass::getPixels, py::const_))
+		.def("getTexture", py::overload_cast<>(&ImageClass::getTexture))
+		.def("getTexture", py::overload_cast<>(&ImageClass::getTexture, py::const_))
+		.def("getWidth", (float (ImageClass::*)()) &ImageClass::getWidth)
+		.def("grabScreen", (void (ImageClass::*)(int, int, int, int)) &ImageClass::grabScreen)
+		.def("isAllocated", &ImageClass::isAllocated)
+		.def("isUsingTexture", (bool (ImageClass::*)()) &ImageClass::isUsingTexture)
+		.def(
+			"load",
+			(bool (ImageClass::*)(const std::filesystem::path &, const ofImageLoadSettings &)) &ImageClass::load,
+			py::arg("path"), py::arg("settings") = ofImageLoadSettings()
+		)
+		.def(
+			"load",
+			(bool (ImageClass::*)(const ofBuffer &, const ofImageLoadSettings &)) &ImageClass::load,
+			py::arg("buffer"), py::arg("settings") = ofImageLoadSettings()
+		)
+		.def("mirror", (void (ImageClass::*)(bool, bool)) &ImageClass::mirror)
+		.def("resetAnchor", &ImageClass::resetAnchor)
+		.def("resize", (void (ImageClass::*)(int, int)) &ImageClass::resize)
+		.def("rotate90", (void (ImageClass::*)(int)) &ImageClass::rotate90)
+		.def(
+			"save",
+			py::overload_cast<const std::filesystem::path &, ofImageQualityType>(&ImageClass::save, py::const_),
+			py::arg("fileName"), py::arg("compressionLevel") = OF_IMAGE_QUALITY_BEST
+		)
+		.def(
+			"save",
+			py::overload_cast<ofBuffer &, ofImageFormat, ofImageQualityType>(&ImageClass::save, py::const_),
+			py::arg("buffer"), py::arg("imageFormat") = OF_IMAGE_FORMAT_PNG, py::arg("compressionLevel") = OF_IMAGE_QUALITY_BEST
+		)
+		.def("setAnchorPercent", (void (ImageClass::*)(float, float)) &ImageClass::setAnchorPercent)
+		.def("setAnchorPoint", (void (ImageClass::*)(float, float)) &ImageClass::setAnchorPoint)
+		.def("setColor", py::overload_cast<int, int, const ofColor_<PixelType> &>(&ImageClass::setColor))
+		.def("setColor", py::overload_cast<int, const ofColor_<PixelType> &>(&ImageClass::setColor))
+		.def("setColor", py::overload_cast<const ofColor_<PixelType> &>(&ImageClass::setColor))
+		.def("setCompression", (void (ImageClass::*)(ofTexCompression)) &ImageClass::setCompression)
+		.def(
+			"setFromPixels",
+			py::overload_cast<const PixelType *, int, int, ofImageType, bool>(&ImageClass::setFromPixels),
+			py::arg("pixels"), py::arg("w"), py::arg("h"), py::arg("type"), py::arg("bOderIsRGB") = true)
+		.def("setFromPixels", py::overload_cast<const ofPixels_<PixelType> &>(&ImageClass::setFromPixels))
+		.def("setImageType", (void (ImageClass::*)(ofImageType)) &ImageClass::setImageType)
+		.def("setUseTexture", (void (ImageClass::*)(bool)) &ImageClass::setUseTexture)
+		.def("unbind", (void (ImageClass::*)(int)) &ImageClass::unbind, py::arg("textureLocation") = 0)
+		.def("update", &ImageClass::update);
+}
 
 void pybind_graphics(py::module m) {
 	m.def("ofBackground", (void(*) (const ofColor &)) &ofBackground);
@@ -171,4 +248,94 @@ void pybind_graphics(py::module m) {
 	//m.def("ofVertices", (void(*) (const vector &)) &ofVertices);
 	m.def("ofViewport", (void(*) (ofRectangle)) &ofViewport);
 	m.def("ofViewport", (void(*) (float, float, float, float, bool)) &ofViewport);
+
+	// ofPixels.h ------------------------------------------------------------
+
+	py::enum_<ofPixelFormat>(m, "ofPixelFormat")
+		.value("OF_PIXELS_GRAY", ofPixelFormat::OF_PIXELS_GRAY)
+		.value("OF_PIXELS_GRAY_ALPHA", ofPixelFormat::OF_PIXELS_GRAY_ALPHA)
+		.value("OF_PIXELS_RGB", ofPixelFormat::OF_PIXELS_RGB)
+		.value("OF_PIXELS_BGR", ofPixelFormat::OF_PIXELS_BGR)
+		.value("OF_PIXELS_RGBA", ofPixelFormat::OF_PIXELS_RGBA)
+		.value("OF_PIXELS_BGRA", ofPixelFormat::OF_PIXELS_BGRA)
+		.value("OF_PIXELS_RGB565", ofPixelFormat::OF_PIXELS_RGB565)
+		.value("OF_PIXELS_NV12", ofPixelFormat::OF_PIXELS_NV12)
+		.value("OF_PIXELS_NV21", ofPixelFormat::OF_PIXELS_NV21)
+		.value("OF_PIXELS_YV12", ofPixelFormat::OF_PIXELS_YV12)
+		.value("OF_PIXELS_I420", ofPixelFormat::OF_PIXELS_I420)
+		.value("OF_PIXELS_YUY2", ofPixelFormat::OF_PIXELS_YUY2)
+		.value("OF_PIXELS_UYVY", ofPixelFormat::OF_PIXELS_UYVY)
+		.value("OF_PIXELS_Y", ofPixelFormat::OF_PIXELS_Y)
+		.value("OF_PIXELS_U", ofPixelFormat::OF_PIXELS_U)
+		.value("OF_PIXELS_V", ofPixelFormat::OF_PIXELS_V)
+		.value("OF_PIXELS_UV", ofPixelFormat::OF_PIXELS_UV)
+		.value("OF_PIXELS_VU", ofPixelFormat::OF_PIXELS_VU)
+		.value("OF_PIXELS_NUM_FORMATS", ofPixelFormat::OF_PIXELS_NUM_FORMATS)
+		.value("OF_PIXELS_UNKNOWN", ofPixelFormat::OF_PIXELS_UNKNOWN)
+		.value("OF_PIXELS_NATIVE", ofPixelFormat::OF_PIXELS_NATIVE)
+		.export_values();
+
+	// ofImage.h -------------------------------------------------------------
+	py::enum_<ofImageQualityType>(m, "ofImageQualityType")
+		/// \brief Equivalent to FreeImage's JPEG_QUALITYSUPERB (100:1 ratio)
+		.value("OF_IMAGE_QUALITY_BEST", ofImageQualityType::OF_IMAGE_QUALITY_BEST)
+		/// \brief Equivalent to FreeImage's JPEG_QUALITYGOOD (75:1 ratio)
+		.value("OF_IMAGE_QUALITY_HIGH", ofImageQualityType::OF_IMAGE_QUALITY_HIGH)
+		/// \brief Equivalent to FreeImage's JPEG_QUALITYNORMAL (50:1 ratio)
+		.value("OF_IMAGE_QUALITY_MEDIUM", ofImageQualityType::OF_IMAGE_QUALITY_MEDIUM)
+		/// \brief Equivalent to FreeImage's JPEG_QUALITYAVERAGE (25:1 ratio)
+		.value("OF_IMAGE_QUALITY_LOW", ofImageQualityType::OF_IMAGE_QUALITY_LOW)
+		/// \brief Equivalent to FreeImage's JPEG_QUALITYBAD (10:1 ratio)
+		.value("OF_IMAGE_QUALITY_WORST", ofImageQualityType::OF_IMAGE_QUALITY_WORST)
+		.export_values();
+
+	py::enum_<ofImageFormat>(m, "ofImageFormat")
+		.value("OF_IMAGE_FORMAT_BMP", ofImageFormat::OF_IMAGE_FORMAT_BMP)
+		.value("OF_IMAGE_FORMAT_ICO", ofImageFormat::OF_IMAGE_FORMAT_ICO)
+		.value("OF_IMAGE_FORMAT_JPEG", ofImageFormat::OF_IMAGE_FORMAT_JPEG)
+		.value("OF_IMAGE_FORMAT_JNG", ofImageFormat::OF_IMAGE_FORMAT_JNG)
+		.value("OF_IMAGE_FORMAT_KOALA", ofImageFormat::OF_IMAGE_FORMAT_KOALA)
+		.value("OF_IMAGE_FORMAT_LBM", ofImageFormat::OF_IMAGE_FORMAT_LBM)
+		.value("OF_IMAGE_FORMAT_IFF", ofImageFormat::OF_IMAGE_FORMAT_IFF)
+		.value("OF_IMAGE_FORMAT_MNG", ofImageFormat::OF_IMAGE_FORMAT_MNG)
+		.value("OF_IMAGE_FORMAT_PBM", ofImageFormat::OF_IMAGE_FORMAT_PBM)
+		.value("OF_IMAGE_FORMAT_PBMRAW", ofImageFormat::OF_IMAGE_FORMAT_PBMRAW)
+		.value("OF_IMAGE_FORMAT_PCD", ofImageFormat::OF_IMAGE_FORMAT_PCD)
+		.value("OF_IMAGE_FORMAT_PCX", ofImageFormat::OF_IMAGE_FORMAT_PCX)
+		.value("OF_IMAGE_FORMAT_PGM", ofImageFormat::OF_IMAGE_FORMAT_PGM)
+		.value("OF_IMAGE_FORMAT_PGMRAW", ofImageFormat::OF_IMAGE_FORMAT_PGMRAW)
+		.value("OF_IMAGE_FORMAT_PNG", ofImageFormat::OF_IMAGE_FORMAT_PNG)
+		.value("OF_IMAGE_FORMAT_PPM", ofImageFormat::OF_IMAGE_FORMAT_PPM)
+		.value("OF_IMAGE_FORMAT_PPMRAW", ofImageFormat::OF_IMAGE_FORMAT_PPMRAW)
+		.value("OF_IMAGE_FORMAT_RAS", ofImageFormat::OF_IMAGE_FORMAT_RAS)
+		.value("OF_IMAGE_FORMAT_TARGA", ofImageFormat::OF_IMAGE_FORMAT_TARGA)
+		.value("OF_IMAGE_FORMAT_TIFF", ofImageFormat::OF_IMAGE_FORMAT_TIFF)
+		.value("OF_IMAGE_FORMAT_WBMP", ofImageFormat::OF_IMAGE_FORMAT_WBMP)
+		.value("OF_IMAGE_FORMAT_PSD", ofImageFormat::OF_IMAGE_FORMAT_PSD)
+		.value("OF_IMAGE_FORMAT_CUT", ofImageFormat::OF_IMAGE_FORMAT_CUT)
+		.value("OF_IMAGE_FORMAT_XBM", ofImageFormat::OF_IMAGE_FORMAT_XBM)
+		.value("OF_IMAGE_FORMAT_XPM", ofImageFormat::OF_IMAGE_FORMAT_XPM)
+		.value("OF_IMAGE_FORMAT_DDS", ofImageFormat::OF_IMAGE_FORMAT_DDS)
+		.value("OF_IMAGE_FORMAT_GIF", ofImageFormat::OF_IMAGE_FORMAT_GIF)
+		.value("OF_IMAGE_FORMAT_HDR", ofImageFormat::OF_IMAGE_FORMAT_HDR)
+		.value("OF_IMAGE_FORMAT_FAXG3", ofImageFormat::OF_IMAGE_FORMAT_FAXG3)
+		.value("OF_IMAGE_FORMAT_SGI", ofImageFormat::OF_IMAGE_FORMAT_SGI)
+		.value("OF_IMAGE_FORMAT_EXR", ofImageFormat::OF_IMAGE_FORMAT_EXR)
+		.value("OF_IMAGE_FORMAT_J2K", ofImageFormat::OF_IMAGE_FORMAT_J2K)
+		.value("OF_IMAGE_FORMAT_JP2", ofImageFormat::OF_IMAGE_FORMAT_JP2)
+		.value("OF_IMAGE_FORMAT_PFM", ofImageFormat::OF_IMAGE_FORMAT_PFM)
+		.value("OF_IMAGE_FORMAT_PICT", ofImageFormat::OF_IMAGE_FORMAT_PICT)
+		.value("OF_IMAGE_FORMAT_RAW", ofImageFormat::OF_IMAGE_FORMAT_RAW)
+		.export_values();
+
+	py::class_<ofImageLoadSettings>(m, "ofImageLoadSettings")
+		.def(py::init<>())
+		.def_readwrite("accurate", &ofImageLoadSettings::accurate)
+		.def_readwrite("exifRotate", &ofImageLoadSettings::exifRotate)
+		.def_readwrite("grayscale", &ofImageLoadSettings::grayscale)
+		.def_readwrite("separateCMYK", &ofImageLoadSettings::separateCMYK);
+
+	declare_ofImage<unsigned char>(m, std::string("ofImage"));
+	declare_ofImage<float>(m, std::string("ofFloatImage"));
+	declare_ofImage<unsigned short>(m, std::string("ofShortImage"));
 }

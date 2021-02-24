@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -194,6 +194,7 @@
     <ClInclude Include="src\pybind_graphics.h" />
     <ClInclude Include="src\pybind_math.h" />
     <ClInclude Include="src\pybind_types.h" />
+    <ClInclude Include="src\pybind_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
