@@ -10,4 +10,5 @@ void pybind_utils(py::module m) {
 		"ofToDataPath", (std::string(*)(const std::filesystem::path &, bool)) &ofToDataPath,
 		py::arg("path"), py::arg("absolute") = false
 	);
+	m.def("ofSetDataPathRoot", (void(*)(const std::filesystem::path &)) &ofSetDataPathRoot);
 }
