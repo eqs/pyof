@@ -5,7 +5,7 @@
 
 namespace py = pybind11;
 
-void pybind_utils(py::module m) {
+void pybind_gl(py::module m) {
 	m.def(
 		"ofToDataPath", (std::string(*)(const std::filesystem::path &, bool)) &ofToDataPath,
 		py::arg("path"), py::arg("absolute") = false
@@ -39,11 +39,12 @@ void pybind_utils(py::module m) {
 		// ofFboSettings(std::shared_ptr<ofBaseGLRenderer> renderer=nullptr);
 		// bool operator!=(const ofFboSettings & other);
 
+	// py::class_<ofFbo, ofBaseDraws, ofBaseHasTexture>(m, "ofFbo", py::multiple_inheritance())
 	py::class_<ofFbo>(m, "ofFbo")
 		.def(py::init<>())
 		.def(py::init<const ofFbo &>())
 		.def("activateAllDrawBuffers", (void (ofFbo::*)()) &ofFbo::activateAllDrawBuffers)
-		.def("allocate", py::overload_cast<int, int, int, int>(&ofFbo::allocate)
+		.def("allocate", py::overload_cast<int, int, int, int>(&ofFbo::allocate),
 			py::arg("width"), py::arg("height"), py::arg("internalformat") = GL_RGBA, py::arg("numSamples") = 0)
 		.def("allocate", py::overload_cast<ofFboSettings>(&ofFbo::allocate),
 			py::arg("settings") = ofFboSettings(nullptr))
@@ -51,7 +52,7 @@ void pybind_utils(py::module m) {
 		.def("begin", (void (ofFbo::*)(ofFboMode)) &ofFbo::begin,
 			py::arg("mode") = OF_FBOMODE_PERSPECTIVE | OF_FBOMODE_MATRIXFLIP)
 		.def("bind", (void (ofFbo::*)()) &ofFbo::bind)
-		.def_static("checkGLSupport", (bool (ofFbo::*)()) &ofFbo::checkGLSupport)
+		.def_static("checkGLSupport", (bool (*)()) &ofFbo::checkGLSupport)
 		.def("checkStatus", (bool (ofFbo::*)()) &ofFbo::checkStatus)
 		.def("clear", (void (ofFbo::*)()) &ofFbo::clear)
 		.def("clearColorBuffer", (void (ofFbo::*)(size_t, const ofFloatColor &)) &ofFbo::clearColorBuffer)
@@ -69,7 +70,7 @@ void pybind_utils(py::module m) {
 		.def("flagDirty", (void (ofFbo::*)()) &ofFbo::flagDirty)
 		.def("getDefaultTextureIndex", (int (ofFbo::*)()) &ofFbo::getDefaultTextureIndex)
 		.def("getDepthBuffer", (GLuint (ofFbo::*)()) &ofFbo::getDepthBuffer)
-		.def("getDepthTexture", (ofTexture (ofFbo::*)()) &ofFbo::getDepthTexture)
+		.def("getDepthTexture", (ofTexture & (ofFbo::*)()) &ofFbo::getDepthTexture)
 		.def("getHeight", (float (ofFbo::*)()) &ofFbo::getHeight)
 		.def("getId", (GLuint (ofFbo::*)()) &ofFbo::getId)
 		.def("getIdDrawBuffer", (GLuint (ofFbo::*)()) &ofFbo::getIdDrawBuffer)
@@ -82,15 +83,15 @@ void pybind_utils(py::module m) {
 		.def("getWidth", (float (ofFbo::*)()) &ofFbo::getWidth)
 		.def("isAllocated", (bool (ofFbo::*)()) &ofFbo::isAllocated)
 		.def("isUsingTexture", (bool (ofFbo::*)()) &ofFbo::isUsingTexture)
-		.def_static("maxColorAttachments", (int (ofFbo::*)()) &ofFbo::maxColorAttachments)
-		.def_static("maxDrawBuffers", (int (ofFbo::*)()) &ofFbo::maxDrawBuffers)
-		.def_static("maxSamples", (int (ofFbo::*)()) &ofFbo::maxSamples)
-		.def("readToPixels", py::overload_cast<ofPixels, int>(&ofFbo::readToPixels, py::const_),
-				py::arg("pixels"), py::("attachmentPoint") = 0)
-		.def("readToPixels", py::overload_cast<ofShortPixels, int>(&ofFbo::readToPixels, py::const_),
-				py::arg("pixels"), py::("attachmentPoint") = 0)
-		.def("readToPixels", py::overload_cast<ofFloatPixels, int>(&ofFbo::readToPixels, py::const_),
-				py::arg("pixels"), py::("attachmentPoint") = 0)
+		.def_static("maxColorAttachments", (int (*)()) &ofFbo::maxColorAttachments)
+		.def_static("maxDrawBuffers", (int (*)()) &ofFbo::maxDrawBuffers)
+		.def_static("maxSamples", (int (*)()) &ofFbo::maxSamples)
+		.def("readToPixels", py::overload_cast<ofPixels &, int>(&ofFbo::readToPixels, py::const_),
+			py::arg("pixels"), py::arg("attachmentPoint") = 0)
+		.def("readToPixels", py::overload_cast<ofShortPixels &, int>(&ofFbo::readToPixels, py::const_),
+			py::arg("pixels"), py::arg("attachmentPoint") = 0)
+		.def("readToPixels", py::overload_cast<ofFloatPixels &, int>(&ofFbo::readToPixels, py::const_),
+			py::arg("pixels"), py::arg("attachmentPoint") = 0)
 		.def("resetAnchor", (void (ofFbo::*)()) &ofFbo::resetAnchor)
 		.def("setActiveDrawBuffer", (void (ofFbo::*)(int)) &ofFbo::setActiveDrawBuffer)
 		.def("setActiveDrawBuffers", (void (ofFbo::*)(const std::vector<int> &)) &ofFbo::setActiveDrawBuffers)
@@ -99,5 +100,5 @@ void pybind_utils(py::module m) {
 		.def("setDefaultTextureIndex", (void (ofFbo::*)(int)) &ofFbo::setDefaultTextureIndex)
 		.def("setUseTexture", (void (ofFbo::*)(bool)) &ofFbo::setUseTexture)
 		.def("unbind", (void (ofFbo::*)()) &ofFbo::unbind)
-		.def("updateTexture"), (void (ofFbo::*)(int)) &ofFbo::updateTexture;
+		.def("updateTexture", (void (ofFbo::*)(int)) &ofFbo::updateTexture);
 }
