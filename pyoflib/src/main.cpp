@@ -41,6 +41,13 @@ PYBIND11_MODULE(pyoflib, m) {
 	m.def("ofSetWindowTitle", (void(*)(std::string)) &ofSetWindowTitle);
 	m.def("ofGetFrameNum", (int(*)()) &ofGetFrameNum);
 
+	// Misc
+
+	// https://stackoverflow.com/questions/56009999/python-bindings-using-pybind11-with-stdfilesystem-as-function-argument-giving
+	py::class_<std::filesystem::path>(m, "Path")
+		.def(py::init<std::string>());
+	py::implicitly_convertible<std::string, std::filesystem::path>();
+
 	m.attr("__version__") = py::str("0.0.1");
 	m.attr("__author__") = py::str("eqs");
 }
