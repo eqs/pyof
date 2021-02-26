@@ -6,49 +6,109 @@
 namespace py = pybind11;
 
 void ofPyBaseApp::setup() {
-	PYBIND11_OVERLOAD(void, ofBaseApp, setup);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, setup);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::update() {
-	PYBIND11_OVERLOAD(void, ofBaseApp, update);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, update);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::draw() {
-	PYBIND11_OVERLOAD(void, ofBaseApp, draw);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, draw);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::exit() {
-	PYBIND11_OVERLOAD(void, ofBaseApp, exit);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, exit);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::keyPressed(int key) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, keyPressed, key);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, keyPressed, key);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::keyReleased(int key) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, keyReleased, key);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, keyReleased, key);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::mouseMoved(int x, int y) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, mouseMoved, x, y);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, mouseMoved, x, y);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::mouseDragged(int x, int y, int button) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, mouseDragged, x, y, button);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, mouseDragged, x, y, button);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::mousePressed(int x, int y, int button) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, mousePressed, x, y, button);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, mousePressed, x, y, button);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::mouseReleased(int x, int y, int button) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, mouseReleased, x, y, button);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, mouseReleased, x, y, button);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::mouseEntered(int x, int y) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, mouseEntered, x, y);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, mouseEntered, x, y);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::mouseExited(int x, int y) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, mouseExited, x, y);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, mouseExited, x, y);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::windowResized(int w, int h) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, windowResized, w, h);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, windowResized, w, h);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::dragEvent(ofDragInfo dragInfo) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, dragEvent, dragInfo);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, dragEvent, dragInfo);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 void ofPyBaseApp::gotMessage(ofMessage msg) {
-	PYBIND11_OVERLOAD(void, ofBaseApp, gotMessage, msg);
+	try{
+		PYBIND11_OVERLOAD(void, ofBaseApp, gotMessage, msg);
+	} catch (py::error_already_set &e) {
+		std::cerr << e.what() << std::endl;
+	}
 }
 
 
