@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import numpy as np
-
-sys.path.append('./pyoflib/bin')
-import pyoflib as of
+import pyof as of
 
 
 class ofApp(of.ofPyBaseApp):

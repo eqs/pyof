@@ -2,9 +2,7 @@
 import sys
 import numpy as np
 from scipy.spatial import distance_matrix
-
-sys.path.append('./pyoflib/bin')
-import pyoflib as of
+import pyof as of
 
 
 class ofApp(of.ofPyBaseApp):
