@@ -1,0 +1,1 @@
+recursive-include pyof  *.dll *.pyd pyoflib.exp pyoflib.lib
