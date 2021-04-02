@@ -3,6 +3,7 @@ import io
 import os
 import re
 import sys
+import glob
 import platform
 import subprocess
 
@@ -53,6 +54,8 @@ setup(
     cmdclass={'build_ext': OFBuild},
     ext_modules=[OFExtension('pyof.lib.pyoflib', 'pyoflib/pyoflib.sln')],
     zip_safe=False,
+
+    include_package_data=True,
 
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
