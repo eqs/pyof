@@ -27,5 +27,4 @@ $ pip install -e .
 
 ## Examples
 
-See [examples](https://github.com/eqs/pyof/tree/main/examples).
-
+See http://www.eqseqs.work/pyof-examples/
