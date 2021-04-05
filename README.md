@@ -6,6 +6,10 @@
 
 ## Installation
 
+### Platform
+
+* Windows 10
+
 ### Requirements
 
 * Visual Studio 2017
